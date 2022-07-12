@@ -51,15 +51,21 @@ for iiblock = 98:99
     %imshow(GaborImage)
     %title(["Signal: ", num2str(currentResponse)])
 
-    %Save the data to the JSON format
-    s.response = currentResponse;
-    s.Image = GaborImage;
-
     %Save to file
-    fileName = sprintf('Block%d_Trial%d', iiblock, iitrial);
-    fid = fopen(("./ImageData/Block" + num2str(iiblock) + "/" + fileName + ".json"), 'w');
-    fprintf(fid, jsonencode(s));
-    fclose(fid);
+    fileName = sprintf('Block=%d_Trial=%d_Result=%d', iiblock, iitrial, currentResponse);
+
+    %Save data in relavent folder
+    if currentResponse
+        
+        %Write Image
+        imwrite(GaborImage, ("./ImageData/Signal/" + fileName + ".png"));
+
+    else
+        
+        %Write Image
+        imwrite(GaborImage, ("./ImageData/NoSignal/" + fileName + ".png"));
+
+    end
    
 
   end 
