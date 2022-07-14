@@ -45,7 +45,7 @@ for iiblock = 98:99
     Angles = angle(dsgSigPlusNoise)./pi.*180;
 
     %Generate Gabor patches
-    GaborImage = createFullGabor(Angles);
+    GaborImage = createFullGabor(Angles, 1);
 
     %Plot the data
     %imshow(GaborImage)

@@ -1,8 +1,8 @@
 %Function which creates a single gabor patch (orientation in deg)
-function gaborPatch = createSingleGabor(orientation)
+function gaborPatch = createSingleGabor(orientation, gaborWidth)
 
-    %Defining useful variables
-    gaborWidth = 95;
+    %Defining useful variable
+    gaborWidth = gaborWidth - 1;
     standDev = 10;
     frequency = 0.03; %cycles per pixel
     phase = 0;
