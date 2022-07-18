@@ -22,7 +22,7 @@ for i = 1:trials
     imshow(uint8(128*ones(768,768)));
 
     %Get input from user
-    currentResponse = input("Was there a signal present? (y/n/NA): ", "s");
+    currentResponse = input(["(Trial ", num2str(trials), ") Was there a signal present? (y/n/NA): "], "s");
 
     %Save to file
     fileName = sprintf('%s%d_Result=%d', trialName, i, currentResponse);
