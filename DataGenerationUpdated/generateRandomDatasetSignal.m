@@ -30,7 +30,7 @@ end
 
 %Generate a noise array
 noiseArray = (-1 -1i) + 2*rand(8,8,"like", 1i);
-noiseArray = 0.8*rand()*noiseArray;
+noiseArray = 0.7*rand()*noiseArray;
 
 %Commbining Noise and 
 signalPlusNoise = noiseArray + signalArray;
