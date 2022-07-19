@@ -4,6 +4,8 @@ import PIL
 import PIL.Image
 import tensorflow as tf
 import pathlib
+from random import seed
+from random import randint
 
 #Limit the number of memory used for GPU
 print("TensorFlow version:", tf.__version__)
@@ -21,35 +23,48 @@ list_ds = tf.data.Dataset.list_files(str(data_dir/"*/*.png"))
 nosignal = list(data_dir.glob('NoSignal/*'))
 PIL.Image.open(str(nosignal[0]))
 
+#Determining Seed
+seed = randint(0, 5000)
+seed = 473
+print("The seed for this run is: ", seed)
+
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
     subset="training",
-    seed=12345,
+    seed = seed,
     image_size=(768, 768),
-    batch_size=6)
+    batch_size=8)
 
 #Validation data
 validation_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     validation_split=0.2,
     subset="validation",
-    seed=12345,
+    seed = seed,
     image_size=(768, 768),
-    batch_size=6)
+    batch_size=8)
+
+#Data augmentation to reduce overfitting
+data_augmentation = tf.keras.Sequential(
+    [
+        tf.keras.layers.RandomFlip("horizontal"),
+    ]
+)
 
 #Normalising the images to within 0:1
 normalization_layer = tf.keras.layers.Rescaling(1./255)
 
 #Structure of the model
 model = tf.keras.Sequential([
+  #data_augmentation,
   tf.keras.layers.Rescaling(1./255),
-  tf.keras.layers.Conv2D(32, 3, activation='relu'),
+  tf.keras.layers.Conv2D(64, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(32, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(32, 3, activation='relu'),
+  tf.keras.layers.Conv2D(16, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dense(128, activation='relu'),
@@ -58,7 +73,7 @@ model = tf.keras.Sequential([
 ])
 
 model.compile(
-  optimizer="adam",
+  optimizer= 'adam',
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
