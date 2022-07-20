@@ -14,18 +14,17 @@ print("Num GPUs Available: ", len(GPU_Device))
 tf.config.experimental.set_memory_growth(GPU_Device[0], True)
 
 #Go to the directory with the data
-data_dir = pathlib.Path("../P4P_GeneratingData/NewImageData/")
+data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 
 #Mark the dataset as the png images from the files
 list_ds = tf.data.Dataset.list_files(str(data_dir/"*/*.png"))
 
 #Indicate the negative dataset
-nosignal = list(data_dir.glob('NoSignal/*'))
+nosignal = list(data_dir.glob('UserNoSignal/*'))
 PIL.Image.open(str(nosignal[0]))
 
 #Determining Seed
 seed = randint(0, 5000)
-seed = 473
 print("The seed for this run is: ", seed)
 
 #Training data
@@ -35,7 +34,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     subset="training",
     seed = seed,
     image_size=(768, 768),
-    batch_size=8)
+    batch_size=4)
 
 #Validation data
 validation_ds = tf.keras.utils.image_dataset_from_directory(
@@ -44,7 +43,7 @@ validation_ds = tf.keras.utils.image_dataset_from_directory(
     subset="validation",
     seed = seed,
     image_size=(768, 768),
-    batch_size=8)
+    batch_size=4)
 
 #Data augmentation to reduce overfitting
 data_augmentation = tf.keras.Sequential(
@@ -73,7 +72,7 @@ model = tf.keras.Sequential([
 ])
 
 model.compile(
-  optimizer= 'adam',
+  optimizer= tf.keras.optimizers.Adam(learning_rate=0.5e-3),
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
