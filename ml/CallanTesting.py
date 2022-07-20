@@ -69,16 +69,16 @@ model = tf.keras.Sequential([
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.25),
-  tf.keras.layers.Dense(2)
+  tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
 model.compile(
   optimizer= tf.keras.optimizers.Adam(learning_rate=0.5e-3),
-  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+  loss='binary_crossentropy',
   metrics=['accuracy'])
 
 model.fit(
   train_ds,
   validation_data=validation_ds,
-  epochs=10
+  epochs=10,
 )
