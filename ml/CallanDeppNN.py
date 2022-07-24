@@ -7,6 +7,8 @@ import pathlib
 from random import seed
 from random import randint
 
+import matplotlib.pyplot as plt
+
 #Limit the number of memory used for GPU
 print("TensorFlow version:", tf.__version__)
 GPU_Device = tf.config.experimental.list_physical_devices('GPU')
@@ -24,9 +26,10 @@ nosignal = list(data_dir.glob('NoSignal/*'))
 PIL.Image.open(str(nosignal[0]))
 
 #Determining Seed
-seed = 642524
-#seed = randint(0, 5000)
+#seed = 642524
+seed = randint(0, 5000)
 print("The seed for this run is: ", seed)
+epochs = 5
 
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -63,6 +66,8 @@ model = tf.keras.Sequential([
   normalization_layer,
   tf.keras.layers.Conv2D(64, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Conv2D(32, 3, activation='relu'),
+  tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.25),
@@ -74,8 +79,46 @@ model.compile(
   loss='binary_crossentropy',
   metrics=['accuracy'])
 
-model.fit(
+history = model.fit(
   train_ds,
   validation_data=validation_ds,
-  epochs=10,
+  epochs=epochs,
 )
+
+#Prediction Data
+data_dir = pathlib.Path("../DataGenerationUpdated/ConfusionMatrixData/")
+prediction_ds = tf.keras.utils.image_dataset_from_directory(
+    data_dir,
+    seed = seed,
+    shuffle=False,
+    image_size=(256, 256),
+    batch_size=1)
+
+#Atetmpting to generate the confusion matrix
+pred = model.predict(
+    prediction_ds)
+pred = tf.greater(pred, 0.5)
+print(pred)
+labels = np.concatenate([y for x, y in prediction_ds], axis = 0)
+print(labels)
+print(tf.math.confusion_matrix(labels, pred))
+
+#Plotting results of model
+#acc = history.history['accuracy']
+#val_acc = history.history['val_accuracy']
+#loss = history.history['loss']
+#val_loss = history.history['val_loss']
+
+#plt.plot(acc, 'bo', label='Training acc')
+#plt.plot(val_acc, 'b', label='Validation acc')
+#plt.title('Training and validation accuracy')
+#plt.legend()
+
+#plt.figure()
+
+#plt.plot(loss, 'bo', label='Training loss')
+#plt.plot(val_loss, 'b', label='Validation loss')
+#plt.title('Training and validation loss')
+#plt.legend()
+
+#plt.show()

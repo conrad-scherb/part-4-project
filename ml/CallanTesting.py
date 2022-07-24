@@ -19,17 +19,11 @@ tf.config.experimental.set_memory_growth(GPU_Device[0], True)
 #Go to the directory with the data
 data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 
-#Mark the dataset as the png images from the files
-list_ds = tf.data.Dataset.list_files(str(data_dir/"*/*.png"))
-
-#Indicate the negative dataset
-nosignal = list(data_dir.glob('UserNoSignal/*'))
-PIL.Image.open(str(nosignal[0]))
-
 #Determining Seed
 seed = 1234
 #seed = randint(0, 5000)
 print("The seed for this run is: ", seed)
+epochs = 20
 
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -37,6 +31,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     validation_split=0.2,
     subset="training",
     seed = seed,
+    shuffle=True,
     image_size=(256, 256),
     batch_size=4)
 
@@ -46,6 +41,7 @@ validation_ds = tf.keras.utils.image_dataset_from_directory(
     validation_split=0.2,
     subset="validation",
     seed = seed,
+    shuffle=False,
     image_size=(256, 256),
     batch_size=4)
 
@@ -64,7 +60,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(64, 3, activation='relu'),
+  tf.keras.layers.Conv2D(128, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(32, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
@@ -82,8 +78,18 @@ model.compile(
 history = model.fit(
   train_ds,
   validation_data=validation_ds,
-  epochs=2,
+  epochs=epochs,
 )
+
+#Atetmpting to generate the 
+#pred = model.predict(
+#    validation_ds,
+#    batch_size=4)
+#pred = tf.greater(pred, 0.5)
+#print(pred)
+#labels = np.concatenate([y for x, y in validation_ds], axis = 0)
+#print(labels)
+#print(tf.math.confusion_matrix(labels, pred))
 
 #Plotting results of model
 acc = history.history['accuracy']
@@ -91,15 +97,15 @@ val_acc = history.history['val_accuracy']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 
-plt.plot(epochs, acc, 'bo', label='Training acc')
-plt.plot(epochs, val_acc, 'b', label='Validation acc')
+plt.plot(acc, 'bo', label='Training acc')
+plt.plot(val_acc, 'b', label='Validation acc')
 plt.title('Training and validation accuracy')
 plt.legend()
 
 plt.figure()
 
-plt.plot(epochs, loss, 'bo', label='Training loss')
-plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.plot(loss, 'bo', label='Training loss')
+plt.plot(val_loss, 'b', label='Validation loss')
 plt.title('Training and validation loss')
 plt.legend()
 
