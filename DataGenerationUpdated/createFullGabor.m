@@ -1,5 +1,5 @@
 % Creating Gabor Image from array of 64 angles
-function Image = createFullGabor(Angles, border)
+function Image = createFullGabor(Angles, border, size)
     
     %Defining block size (should be same as gabor width)
     blockSize = 64;
@@ -14,12 +14,12 @@ function Image = createFullGabor(Angles, border)
     if (border)
 
         %Initialise Image
-        Image = uint8(zeros(blockSize*12, blockSize*12));
-        for i=1:12
-            for ii=1:12
+        Image = uint8(zeros(blockSize*(size + 4), blockSize*(size + 4)));
+        for i=1:(size + 4)
+            for ii=1:(size + 4)
     
                 % Add border
-                if ((i<=2) || (i>=11)) || ((ii<=2) || (ii>=11))
+                if ((i<=2) || (i>=(size + 3))) || ((ii<=2) || (ii>=(size + 3)))
                     
                     % Fill in with a gray square
                     Image( (i*blockSize-blockSize+1):(i*blockSize) , (ii*blockSize-blockSize+1):(ii*blockSize) ) = DefaultSqaure;
@@ -36,15 +36,15 @@ function Image = createFullGabor(Angles, border)
         end
     
         %Adding a small white dot in the middle
-        Image(((blockSize*12/2)-3):((blockSize*12/2)+3), ((blockSize*12/2)-3):((blockSize*12/2)+3)) = 200;
+        Image(((blockSize*(size + 4)/2)-3):((blockSize*(size + 4)/2)+3), ((blockSize*(size + 4)/2)-3):((blockSize*(size + 4)/2)+3)) = 200;
         
     %Option for no border
     else
 
         %Initialise Image
-        Image = uint8(zeros(blockSize*8, blockSize*8));
-        for i=1:8
-            for ii=1:8
+        Image = uint8(zeros(blockSize*size, blockSize*size));
+        for i=1:size
+            for ii=1:size
     
                 %Otherwise add the relavent gabor patch
                 Image( (i*blockSize-blockSize+1):(i*blockSize) , (ii*blockSize-blockSize+1):(ii*blockSize) ) = createSingleGabor(Angles(count), blockSize);
@@ -55,7 +55,7 @@ function Image = createFullGabor(Angles, border)
         end
     
         %Adding a small white dot in the middle
-        Image(((blockSize*8/2)-3):((blockSize*8/2)+3), ((blockSize*8/2)-3):((blockSize*8/2)+3)) = 200;
+        Image(((blockSize*size/2)-3):((blockSize*size/2)+3), ((blockSize*size/2)-3):((blockSize*size/2)+3)) = 200;
 
     end
 

@@ -1,16 +1,16 @@
 %Fucntion which generates a random dataset 
-function newDataset = generateRandomDatasetSignal()
+function newDataset = generateRandomDatasetSignal(size)
 
 %First generate the signal, by slecting a random "offset angle"
 offsetAngle = (-1 -1i) + 2*rand("like", 1i);
 
 %Now generate the signal "pattern", where some signals are flipped
-flipped = (rand(8,8) > 0.5);
-signalArray = zeros(8,8);
-for i = 1:8
-    for ii = 1:8
+flipped = (rand(size,size) > 0.5);
+signalArray = zeros(size,size);
+for i = 1:size
+    for ii = 1:size
         %For the left side of the image:
-        if (i<=4)
+        if (i<=(size/2))
             %If the random integer is 1, flip the signal
             if (flipped(i,ii))
                 signalArray(i,ii) = offsetAngle;
@@ -29,14 +29,14 @@ for i = 1:8
 end
 
 %Generate a noise array
-noiseArray = (-1 -1i) + 2*rand(8,8,"like", 1i);
+noiseArray = (-1 -1i) + 2*rand(size,size,"like", 1i);
 noiseArray = 0.7*rand()*noiseArray;
 
 %Commbining Noise and 
 signalPlusNoise = noiseArray + signalArray;
 
 %Return the gabor image
-newDataset = createFullGabor((180/pi)*angle(signalPlusNoise(:)), 1);
+newDataset = createFullGabor((180/pi)*angle(signalPlusNoise(:)), 1, size);
 
 end
 

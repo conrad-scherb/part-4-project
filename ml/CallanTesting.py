@@ -60,7 +60,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(128, 3, activation='relu'),
+  tf.keras.layers.Conv2D(72, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(32, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
@@ -71,7 +71,7 @@ model = tf.keras.Sequential([
 ])
 
 model.compile(
-  optimizer= tf.keras.optimizers.Adam(learning_rate=0.5e-3),
+  optimizer= tf.keras.optimizers.Adam(learning_rate=0.25e-3),
   loss='binary_crossentropy',
   metrics=['accuracy'])
 
