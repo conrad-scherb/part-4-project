@@ -29,7 +29,7 @@ PIL.Image.open(str(nosignal[0]))
 #seed = 642524
 seed = randint(0, 5000)
 print("The seed for this run is: ", seed)
-epochs = 20
+epochs = 5
 
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
