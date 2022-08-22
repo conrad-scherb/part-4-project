@@ -24,7 +24,6 @@ data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 
 #Determining Seed
 seed = randint(0, 5000)
-seed = 466
 print("The seed for this run is: ", seed)
 epochs = 200
 
@@ -33,7 +32,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     seed = seed,
     shuffle=False,
-    image_size=(256, 256))
+    image_size=(128, 128))
 
 #Convert into npy arrays 
 inputs = np.concatenate(list(train_ds.map(lambda x, y:x)))
@@ -81,20 +80,22 @@ for train, test in kfold.split(inputs, targets):
 
         def onCompletion(self):
             #Calculate Epochs until plateu
+            accuracies = np.array(self.accuracies)
+            losses = np.array(self.losses)
             print("Number of epochs until plateau: ", len(self.accuracies))
-            print("The mean plateau value accuract is: ", np.mean(self.accuracies[-15:]))
-            print("The mean plateau value loss is: ", np.mean(self.losses[-15:]))
-            print("The mean plateau value STD is: ", np.std(self.accuracies[-15:]))
-            platacc_per_fold.append(np.mean(self.accuracies[-15:]))
-            platstd_per_fold.append(np.std(self.accuracies[-15:]))
+            print("The mean plateau value accuract is: ", np.mean(accuracies[np.argpartition(self.accuracies, -10)[-10:].astype(int)]))  #Taking the top 6 elements mean
+            print("The mean plateau value loss is: ", np.mean(losses[np.argpartition(self.accuracies, -10)[-10:]]))
+            print("The mean plateau value STD is: ", np.std(accuracies[np.argpartition(self.accuracies, -10)[-10:]]))
+            platacc_per_fold.append(np.mean(accuracies[np.argpartition(self.accuracies, -10)[-10:]]))
+            platstd_per_fold.append(np.std(accuracies[np.argpartition(self.accuracies, -10)[-10:]]))
             plattime_per_fold.append(len(self.accuracies))
-            platloss_per_fold.append(np.mean(self.losses[-15:]))
+            platloss_per_fold.append(np.mean(losses[np.argpartition(self.accuracies, -10)[-10:]]))
 
         def on_epoch_end(self, epoch, logs=None):
             self.accuracies.append(logs["val_accuracy"])
             self.losses.append(logs["val_loss"])
             #Check for error where val accuracy not increasing at all
-            if (len(self.accuracies) > 10) & (np.mean(self.accuracies[-1*(len(self.accuracies) - 1)]) == self.accuracies[len(self.accuracies) - 1]):
+            if (len(self.accuracies) > 10) & (len(set(self.accuracies[-15:])) <= 1):
                 self.model.stop_training = True
                 platacc_per_fold.append(np.nan)
                 platstd_per_fold.append(np.nan)
@@ -113,10 +114,10 @@ for train, test in kfold.split(inputs, targets):
       normalization_layer,
       tf.keras.layers.Conv2D(64, 3, activation='relu'),
       tf.keras.layers.MaxPooling2D(),
-      tf.keras.layers.Conv2D(32, 3, activation='relu'),
+      tf.keras.layers.Conv2D(16, 3, activation='relu'),
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
-      tf.keras.layers.Dense(128, activation='relu'),
+      tf.keras.layers.Dense(8, activation='relu'),
       tf.keras.layers.Dropout(0.25),
       tf.keras.layers.Dense(1, activation='sigmoid')
     ])
@@ -139,7 +140,7 @@ for train, test in kfold.split(inputs, targets):
       targets[train],
       validation_data=(inputs[test], targets[test]),
       epochs=epochs,
-      batch_size=4,
+      batch_size=16,
       callbacks = [plateuStop()]
     )
 
