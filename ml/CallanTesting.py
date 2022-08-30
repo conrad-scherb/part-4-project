@@ -12,11 +12,12 @@ from sklearn.model_selection import KFold
 import matplotlib.pyplot as plt
 
 #Limit the number of memory used for GPU
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+#os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 print("TensorFlow version:", tf.__version__)
 GPU_Device = tf.config.experimental.list_physical_devices('GPU')
 print("Num GPUs Available: ", len(GPU_Device))
 tf.config.experimental.set_memory_growth(GPU_Device[0], True)
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 #os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 
 #Go to the directory with the data
@@ -25,7 +26,7 @@ data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 #Determining Seed
 seed = randint(0, 5000)
 print("The seed for this run is: ", seed)
-epochs = 200
+epochs = 1000
 
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -71,9 +72,9 @@ for train, test in kfold.split(inputs, targets):
 
         def accuracyPlateu(self):
             #Check the last 10 values of the has crateed a new maximum
-            if len(self.accuracies) < 20:
+            if len(self.accuracies) < 125:
                 return False
-            if (max(self.accuracies[-15:]) < max(self.accuracies)):
+            if (max(self.accuracies[-20:]) < max(self.accuracies)):
                 return True
             else:
                 return False
@@ -95,7 +96,7 @@ for train, test in kfold.split(inputs, targets):
             self.accuracies.append(logs["val_accuracy"])
             self.losses.append(logs["val_loss"])
             #Check for error where val accuracy not increasing at all
-            if (len(self.accuracies) > 10) & (len(set(self.accuracies[-15:])) <= 1):
+            if (len(self.accuracies) > 40) & (len(set(self.accuracies[-100:])) <= 1):
                 self.model.stop_training = True
                 platacc_per_fold.append(np.nan)
                 platstd_per_fold.append(np.nan)
@@ -112,19 +113,16 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(64, 3, activation='relu'),
-      tf.keras.layers.MaxPooling2D(),
-      tf.keras.layers.Conv2D(16, 3, activation='relu'),
+      tf.keras.layers.Conv2D(64, 19, activation='relu'),
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
-      tf.keras.layers.Dense(8, activation='relu'),
       tf.keras.layers.Dropout(0.25),
       tf.keras.layers.Dense(1, activation='sigmoid')
     ])
 
     #Compile the model
     model.compile(
-      optimizer= tf.keras.optimizers.Adam(learning_rate=0.25e-3),
+      optimizer= tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.0, nesterov=False, name="SGD"),
       loss='binary_crossentropy',
       metrics=['accuracy'])
 
@@ -140,7 +138,7 @@ for train, test in kfold.split(inputs, targets):
       targets[train],
       validation_data=(inputs[test], targets[test]),
       epochs=epochs,
-      batch_size=16,
+      batch_size=32,
       callbacks = [plateuStop()]
     )
 
@@ -156,7 +154,7 @@ for i in range(0, len(platacc_per_fold)):
 print('------------------------------------------------------------------------')
 print('Average scores for all folds:')
 print(f'> Accuracy: {np.nanmean(platacc_per_fold)} (+- {np.nanstd(platacc_per_fold)})')
-print(f'> Loss: {np.nanmean(platloss_per_fold)}')
+print(f'> Loss: {np.nanmean(platloss_per_fold)} (+- {np.nanstd(platloss_per_fold)})')
 print(f'> Epochs: {np.nanmean(plattime_per_fold)} (+- {np.nanstd(plattime_per_fold)})')
 print('------------------------------------------------------------------------')
 
