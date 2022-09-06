@@ -96,7 +96,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(32, 17, activation='relu'),
+  tf.keras.layers.Conv2D(4, 15, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
@@ -125,4 +125,4 @@ history = model.fit(
 )
 
 #Save the model
-model.save("Model_32Neuron_17Kernel")
+model.save("Model_4Neuron_15Kernel")
