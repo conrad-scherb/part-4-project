@@ -72,7 +72,7 @@ for train, test in kfold.split(inputs, targets):
 
         def accuracyPlateu(self):
             #Check the last 10 values of the has crateed a new maximum
-            if len(self.accuracies) < 125:
+            if len(self.accuracies) < 200:
                 return False
             if (max(self.accuracies[-20:]) < max(self.accuracies)):
                 return True
@@ -96,7 +96,7 @@ for train, test in kfold.split(inputs, targets):
             self.accuracies.append(logs["val_accuracy"])
             self.losses.append(logs["val_loss"])
             #Check for error where val accuracy not increasing at all
-            if (len(self.accuracies) > 40) & (len(set(self.accuracies[-100:])) <= 1):
+            if (len(self.accuracies) > 50) & (len(set(self.accuracies[-100:])) <= 1):
                 self.model.stop_training = True
                 platacc_per_fold.append(np.nan)
                 platstd_per_fold.append(np.nan)
@@ -113,7 +113,9 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(64, 19, activation='relu'),
+      tf.keras.layers.Conv2D(32, 5, activation='relu'),
+      tf.keras.layers.MaxPooling2D(),
+      tf.keras.layers.Conv2D(16, 3, activation='relu'),
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),

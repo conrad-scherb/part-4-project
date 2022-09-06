@@ -17,13 +17,13 @@ for i = 1:trials
     if (rand() > 0.5)
 
         %Generate a signal dataset
-        currentImage = generateRandomDatasetSignal();
+        currentImage = generateRandomDatasetSignal(6);
         signal = true;
 
     else
 
         %Generate a non-signal dataset
-        currentImage = generateRandomDatasetNoSignal();
+        currentImage = generateRandomDatasetNoSignal(6);
         signal = false;
 
     end
