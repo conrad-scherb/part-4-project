@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-model = tf.keras.models.load_model("./ml/Model_32Neuron_9Kernel")
+model = tf.keras.models.load_model("./ml/Model_4Neuron_13Kernel")
 
 for v in model.trainable_variables:
     print(v.name)
@@ -17,22 +17,24 @@ for f in range(filters.shape[3]):
 output = model.layers[2].output
 model_quick = tf.keras.Model(inputs=model.inputs, outputs=output)
 
-img = load_img("./DataGenerationUpdated/UserDataTraining/UserNoSignal/PilotData2_Result=110.png", target_size=(128, 128))
-img = img_to_array(img)
+img2 = load_img("./DataGenerationUpdated/UserDataTraining/UserSignal/lisa.png", target_size=(128, 128))
+img = img_to_array(img2)
 img = np.expand_dims(img, axis=0);
 
 feature_output = model_quick.predict(img)
 
-columns = 8
-rows = 4
+columns = 4
+rows = 1
 for ftr in feature_output:
     #pos = 1
     fig=plt.figure(figsize=(40, 40))
-    for i in range(1, columns*rows +1):
-        fig =plt.subplot(rows, columns, i)
+    fig =plt.subplot(1, 5, 1)
+    plt.imshow(img2, cmap='gray')
+    for i in range(2, columns*rows +2):
+        fig =plt.subplot(rows, columns+1, i)
         fig.set_xticks([])  #Turn off axis
         fig.set_yticks([])
-        plt.imshow(ftr[:, :, i-1], cmap='gray')
+        plt.imshow(ftr[:, :, i-2], cmap='gray')
         #pos += 1
     plt.show()
 
