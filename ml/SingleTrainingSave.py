@@ -35,7 +35,7 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     subset="training",
     seed = seed,
     image_size=(128, 128),
-    batch_size=16)
+    batch_size=32)
 
 #Validation data
 val_ds = tf.keras.utils.image_dataset_from_directory(
@@ -44,7 +44,7 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
     subset="validation",
     seed = seed,
     image_size=(128, 128),
-    batch_size=16)
+    batch_size=32)
 
 #Data augmentation to reduce overfitting
 data_augmentation = tf.keras.Sequential(
@@ -96,7 +96,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(4, 15, activation='relu'),
+  tf.keras.layers.Conv2D(2,15 , activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
@@ -125,4 +125,5 @@ history = model.fit(
 )
 
 #Save the model
-model.save("Model_4Neuron_15Kernel")
+val_acc = history.history['val_accuracy']
+model.save("Model_2Neuron_15Kernel_" +  str(round(val_acc[len(val_acc)-1], 2)) + "accuracy") 

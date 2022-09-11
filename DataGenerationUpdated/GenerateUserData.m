@@ -2,6 +2,7 @@
 clc; clear;
 figure(1);
 imshow(uint8(128*ones(768,768)));
+size = 6;
 
 %Ask the user how many tests they want to do 
 trials = input("How many trails would you like to do?: ");
@@ -17,13 +18,13 @@ for i = 1:trials
     if (rand() > 0.5)
 
         %Generate a signal dataset
-        currentImage = generateRandomDatasetSignal(6);
+        currentImage = generateRandomDatasetSignal(size);
         signal = true;
 
     else
 
         %Generate a non-signal dataset
-        currentImage = generateRandomDatasetNoSignal(6);
+        currentImage = generateRandomDatasetNoSignal(size);
         signal = false;
 
     end
@@ -46,12 +47,12 @@ for i = 1:trials
         if signal
             
             %Save image as a hit
-            imwrite(currentImage, ("./UserData/Hit/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataSmall/Hit/" + fileName + ".png"));
 
         else
 
             %Save image as a hit
-            imwrite(currentImage, ("./UserData/Miss/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataSmall/Miss/" + fileName + ".png"));
 
         end
 
@@ -61,12 +62,12 @@ for i = 1:trials
         if signal
             
             %Save image as a hit
-            imwrite(currentImage, ("./UserData/FalseAffirmation/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataSmall/FalseAffirmation/" + fileName + ".png"));
 
         else
 
             %Save image as a hit
-            imwrite(currentImage, ("./UserData/CorrectRejection/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataSmall/CorrectRejection/" + fileName + ".png"));
 
         end
 
