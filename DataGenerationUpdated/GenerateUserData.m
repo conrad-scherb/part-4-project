@@ -1,8 +1,8 @@
 %Script which generates some new data 
 clc; clear;
 figure(1);
-imshow(uint8(128*ones(768,768)));
 size = 6;
+imshow(uint8(128*ones(size*64+64*4,size*64+64*4)));
 
 %Ask the user how many tests they want to do 
 trials = input("How many trails would you like to do?: ");
@@ -32,7 +32,7 @@ for i = 1:trials
     %Show the image set to the user for 0.5s
     imshow(currentImage);
     pause(0.75);
-    imshow(uint8(128*ones(768,768)));
+    imshow(uint8(128*ones(size*64+64*4,size*64+64*4)));
 
     %Get input from user
     currentResponse = input(("(Trial " + num2str(i) + ") Was there a signal present? (y/n/NA): "), "s");

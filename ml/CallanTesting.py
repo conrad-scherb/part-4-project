@@ -72,7 +72,7 @@ for train, test in kfold.split(inputs, targets):
 
         def accuracyPlateu(self):
             #Check the last 10 values of the has crateed a new maximum
-            if len(self.accuracies) < 125:
+            if len(self.accuracies) < 250:
                 return False
             if (max(self.accuracies[-20:]) < max(self.accuracies)):
                 return True
@@ -113,7 +113,7 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(16, 9, activation='relu'),
+      tf.keras.layers.Conv2D(8, 15, activation='relu'),
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),
