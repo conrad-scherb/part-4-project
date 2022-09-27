@@ -96,7 +96,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(2,15 , activation='relu'),
+  tf.keras.layers.Conv2D(1,5, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
@@ -120,10 +120,10 @@ history = model.fit(
     train_ds,
     validation_data=val_ds,
     epochs=epochs,
-    batch_size=32,
+    batch_size=64,
     callbacks = [plateuStop()]
 )
 
 #Save the model
 val_acc = history.history['val_accuracy']
-model.save("Model_2Neuron_15Kernel_" +  str(round(val_acc[len(val_acc)-1], 2)) + "accuracy") 
+model.save("Model_1Neuron_5Kernel_" +  str(round(val_acc[len(val_acc)-1], 2)) + "accuracy") 
