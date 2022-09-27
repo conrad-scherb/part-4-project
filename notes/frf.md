@@ -10,7 +10,13 @@ Filter-rectify filter is a 3 step process and a secondary image processing techn
 ## How our model relates to FRF
 - Filter step 1 = convolutional layer. Convolving the fitted convolutional filter with the kernels that move across the image is the same as the filtering step. Convolutional filters detect features in images, and in this case they will be orientation sensitive just like the filters used in a FRF model. __TODO: Inspect the convolutional filter directly to see what sort of action it does as a confirmation__
 - Rectification step = nonlinearity (ReLU) activation function. The ReLu activation function removes all values below 0, which has the same effect of full-wave rectification (effectively absolute value) as it prevents negative filter matchings if the orientation is incorrect.
-![](./images/FullWaveRectification.png) ![](./images/ReLu.png)
+
+<div style="display: flex; flex-direction: row; gap: 10px;">
+    <img src="./images/FullWaveRectification.png" height="200" />
+    <img src="./images/ReLu.png" height="200" />
+</div>
+
+- Fitler step 2 = dense layer. The dense layer sums up the rectified filter output values times the weights with adjustment for bias, which does not immediately seem similar to a CNN: however, the presence of the weights and the weight adjustment suggests that only certain orientations will be assigned a large weighting, which allows the neural network to detect the overall orientation of the texture boundary in the image. In our case, we are instead only interested on the presence of a texture boundary or not, which is also accounted for by the weights on each neuron.
 
 ## References: 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3094179/
