@@ -1,7 +1,7 @@
 %Script which generates some new data 
 clc; clear;
 figure(1);
-size = 6;
+size = 10;
 imshow(uint8(128*ones(size*64+64*4,size*64+64*4)));
 
 %Ask the user how many tests they want to do 
@@ -47,12 +47,12 @@ for i = 1:trials
         if signal
             
             %Save image as a hit
-            imwrite(currentImage, ("./UserDataSmall/Hit/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataLarge/Hit/" + fileName + ".png"));
 
         else
 
             %Save image as a hit
-            imwrite(currentImage, ("./UserDataSmall/Miss/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataLarge/Miss/" + fileName + ".png"));
 
         end
 
@@ -62,12 +62,12 @@ for i = 1:trials
         if signal
             
             %Save image as a hit
-            imwrite(currentImage, ("./UserDataSmall/FalseAffirmation/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataLarge/FalseAffirmation/" + fileName + ".png"));
 
         else
 
             %Save image as a hit
-            imwrite(currentImage, ("./UserDataSmall/CorrectRejection/" + fileName + ".png"));
+            imwrite(currentImage, ("./UserDataLarge/CorrectRejection/" + fileName + ".png"));
 
         end
 

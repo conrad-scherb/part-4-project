@@ -1,6 +1,7 @@
 from cmath import nan
 import numpy as np
 import os
+import gc
 import PIL
 import PIL.Image
 import tensorflow as tf
@@ -21,7 +22,7 @@ tf.config.experimental.set_memory_growth(GPU_Device[0], True)
 #os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 
 #Go to the directory with the data
-data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
+data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTrainingLarge/")
 
 #Determining Seed
 seed = randint(0, 5000)
@@ -33,7 +34,9 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     seed = seed,
     shuffle=False,
-    image_size=(128, 128))
+    image_size=(150, 150)) #Large
+    #image_size=(128, 128)) #Medium
+    #image_size=(106, 106)) #Small
 
 #Convert into npy arrays 
 inputs = np.concatenate(list(train_ds.map(lambda x, y:x)))
@@ -72,7 +75,7 @@ for train, test in kfold.split(inputs, targets):
 
         def accuracyPlateu(self):
             #Check the last 10 values of the has crateed a new maximum
-            if len(self.accuracies) < 250:
+            if len(self.accuracies) < 350:
                 return False
             if (max(self.accuracies[-20:]) < max(self.accuracies)):
                 return True
@@ -113,7 +116,9 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(8, 15, activation='relu'),
+      tf.keras.layers.Conv2D(32, 3, activation='relu'), 
+      tf.keras.layers.MaxPooling2D(),
+      tf.keras.layers.Conv2D(16, 3, activation='relu'), 
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),
@@ -138,12 +143,13 @@ for train, test in kfold.split(inputs, targets):
       targets[train],
       validation_data=(inputs[test], targets[test]),
       epochs=epochs,
-      batch_size=32,
+      batch_size=64,
       callbacks = [plateuStop()]
     )
 
     # Increase fold number
     fold_no = fold_no + 1
+    gc.collect()
 
 #Post final statistics of the model
 print('------------------------------------------------------------------------')
