@@ -22,7 +22,7 @@ tf.config.experimental.set_memory_growth(GPU_Device[0], True)
 #os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 
 #Go to the directory with the data
-data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTrainingLarge/")
+data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTrainingSmall/")
 
 #Determining Seed
 seed = randint(0, 5000)
@@ -34,9 +34,9 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     data_dir,
     seed = seed,
     shuffle=False,
-    image_size=(150, 150)) #Large
+    #image_size=(150, 150)) #Large
     #image_size=(128, 128)) #Medium
-    #image_size=(106, 106)) #Small
+    image_size=(106, 106)) #Small
 
 #Convert into npy arrays 
 inputs = np.concatenate(list(train_ds.map(lambda x, y:x)))
@@ -116,9 +116,7 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(32, 3, activation='relu'), 
-      tf.keras.layers.MaxPooling2D(),
-      tf.keras.layers.Conv2D(16, 3, activation='relu'), 
+      tf.keras.layers.Conv2D(1, 19, activation='relu'), 
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),
