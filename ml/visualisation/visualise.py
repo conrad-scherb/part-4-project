@@ -17,7 +17,7 @@ for f in range(filters.shape[3]):
 output = model.layers[2].output
 model_quick = tf.keras.Model(inputs=model.inputs, outputs=output)
 
-img2 = load_img("./DataGenerationUpdated/UserDataTraining/UserSignal/PilotData1_Result=110.png", target_size=(128, 128))
+img2 = load_img("./ml/visualisation/no-signal-horizontal.png", target_size=(128, 128))
 img = img_to_array(img2)
 img = np.expand_dims(img, axis=0);
 
