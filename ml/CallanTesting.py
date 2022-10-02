@@ -116,7 +116,8 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(1, 19, activation='relu'), 
+      tf.keras.layers.Conv2D(32, 13), 
+      tf.keras.layers.LeakyReLU(alpha=0.1),
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),
