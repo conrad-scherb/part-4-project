@@ -9,10 +9,10 @@ filters = (filters - f_min) / (f_max - f_min)
 n_filters, ix = 4, 1
 for i in range(n_filters):
 	f = filters[:, :, :, i]
-	for j in range(3):
-		ax = pyplot.subplot(n_filters, 3, ix)
-		ax.set_xticks([])
-		ax.set_yticks([])
-		pyplot.imshow(f[:, :, j], cmap='gray')
-		ix += 1
+	ax = pyplot.subplot(1, n_filters, ix)
+	ax.set_xticks([])
+	ax.set_yticks([])
+	pyplot.imshow(f[:, :, 1], cmap='gray')
+	ix += 1
+
 pyplot.show()
