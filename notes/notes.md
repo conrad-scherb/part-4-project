@@ -49,4 +49,25 @@ As we only had a single convolutional neuron, the bias for our convolutional lay
 ## What does the fitted kernel actually do
 In order to figure out what the fitted kernel actually does and how it works, we investigated the kernels fitted in 1, 2 and 4 neuron models with kernel size 13.
 
+![](./images/1Neuron13KernVisual.png)
+Above: 1 neuron, 13 kernel size kernels & convolutional layer output.
 
+
+![](./images/2Neuron13KernVisual.png)
+Above: 2 neuron, 13 kernel size kernels & convolutional layer output.
+
+
+![](./images/4Neuron13KernVisual.png)
+Above: 4 neuron, 13 kernel size kernels & convolutional layer output.
+
+We observe that noise filters seem to be fitted in some of the increased number of convolutional filters. These give no output on either signal or no signal which is why they can be removed without causing a drop in accuracy. We found that kernel size 13 was ideal and this makes sense b/c it spans multiple Gabors, allowing for the texture boundary to be found as seen in the image below. When other kernel sizes or neuron number were used, the convolutional filter always ended up having a similar kernel texture when visualised similar to the kernel fitted in the 1-neuron case. This neuron appeared to do the majority of the dicrimination even when more neurons were present due to it creating the most light-up on convolutional filter out.
+
+![](./images/13Kern.png)
+Above: Size of 13 kernel relative to the gabor patches.
+
+## Horizontal boundaries
+
+![](./images/Horizontal.png)
+Above: Size of 13 kernel relative to the gabor patches.
+
+We also found that our trained networks were able to detect horizontal boundaries with ~85% accuracy as seen above even when our network was only trained on vertical boundary images. This must be because the fitted filter is looking for a texture difference as intended across all potential boundaries, rather than just the line between 4 & 5th cols of neurons.
