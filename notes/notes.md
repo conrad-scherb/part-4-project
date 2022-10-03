@@ -71,3 +71,7 @@ Above: Size of 13 kernel relative to the gabor patches.
 Above: Size of 13 kernel relative to the gabor patches.
 
 We also found that our trained networks were able to detect horizontal boundaries with ~85% accuracy as seen above even when our network was only trained on vertical boundary images. This must be because the fitted filter is looking for a texture difference as intended across all potential boundaries, rather than just the line between 4 & 5th cols of neurons.
+
+## Additional Notes
+
+Many studies suggest V1 layer consists of many filters with different orientation and spatial frequencies. Our data shows a similar trend, where increasing the number of filters usually increases the accuracy. However, given that in most models there is only one "major" filter which is doing the bulk of the segregation, it may suggest there are actually less filters of a specific orientation needed (ie. only one type of filter needed for many orientations). Furthermore, there is a plateu in accuracy when neurones reach above ~4, which may suggest the four cardianal directions for orientation are most important.

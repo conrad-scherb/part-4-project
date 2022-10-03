@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib import pyplot
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
-model = tf.keras.models.load_model("./ml/Model_4Neuron_17Kernel")
+model = tf.keras.models.load_model("../Model_1Neuron_13Kernel_0.93accuracy")
 
 # Plot convolutional kernels
 filters = [v for v in model.trainable_variables if v.name == "conv2d/kernel:0"][0].numpy()
@@ -21,7 +21,7 @@ for i in range(n_filters):
 	ix += 1
 
 # Plot the output of the convolutional layers with a non-signal image
-untransformed_img = load_img("./DataGenerationUpdated/UserDataTraining/UserNoSignal/PilotData2_Result=110.png", target_size=(128, 128))
+untransformed_img = load_img("../../DataGenerationUpdated/UserDataTraining/UserNoSignal/PilotData2_Result=110.png", target_size=(128, 128))
 img = img_to_array(untransformed_img)
 img = np.expand_dims(img, axis=0);
 
@@ -44,7 +44,7 @@ for ftr in range(feature_output.shape[3]):
     ix += 1;
 
 # Do it again with a signal image
-untransformed_img = load_img("./DataGenerationUpdated/UserDataTraining/UserSignal/PilotData13_Result=121.png", target_size=(128, 128))
+untransformed_img = load_img("../../DataGenerationUpdated/UserDataTraining/UserSignal/PilotData13_Result=121.png", target_size=(128, 128))
 img = img_to_array(untransformed_img)
 img = np.expand_dims(img, axis=0);
 
