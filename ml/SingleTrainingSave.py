@@ -98,8 +98,6 @@ model = tf.keras.Sequential([
   normalization_layer,
   tf.keras.layers.Conv2D(32,13, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(16,3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
   tf.keras.layers.Dense(1, activation='sigmoid')
@@ -122,10 +120,10 @@ history = model.fit(
     train_ds,
     validation_data=val_ds,
     epochs=epochs,
-    batch_size=64,
+    batch_size=80,
     callbacks = [plateuStop()]
 )
 
 #Save the model
 val_acc = history.history['val_accuracy']
-model.save("Model_8Neuron_16Kernel_" +  str(round(val_acc[len(val_acc)-1], 2)) + "accuracy") 
+model.save("Model_32Neuron_13Kernel_" +  str(round(val_acc[len(val_acc)-1], 3)) + "accuracy") 
