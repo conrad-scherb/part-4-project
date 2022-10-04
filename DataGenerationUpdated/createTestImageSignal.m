@@ -8,7 +8,7 @@ signalArray = zeros(size,size);
 for i = 1:size
     for ii = 1:size
         %For the left side of the image:
-        if (ii<=(size/2))
+        if ((ii+i)<=(size))
             %If the random integer is 1, flip the signal
             if (flipped(i,ii))
                 signalArray(i,ii) = offsetAngle;

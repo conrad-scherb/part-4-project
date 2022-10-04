@@ -12,10 +12,10 @@ for i = 1:trials/2
     fileName = sprintf('Image%d', i);
 
     %Generate a new image set
-    imwrite(createTestImageSignal(size), ("./HorizontalData/Signal/" + fileName + ".png"));
+    imwrite(createTestImageSignal(size), ("./DiagonalData/Signal/" + fileName + ".png"));
 
     %Generate a new image set
-    imwrite(generateRandomDatasetNoSignal(size), ("./HorizontalData/NoSignal/" + fileName + ".png"));
+    imwrite(generateRandomDatasetNoSignal(size), ("./DiagonalData/NoSignal/" + fileName + ".png"));
 
 end
 
