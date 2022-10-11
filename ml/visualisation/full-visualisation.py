@@ -15,11 +15,34 @@ n_filters, ix = filters.shape[3], 2
 
 for i in range(n_filters):
 	f = filters[:, :, :, i]
-	ax = pyplot.subplot(3, n_filters+1, ix)
+	ax = pyplot.subplot(4, n_filters+1, ix)
 	ax.set_xticks([])
 	ax.set_yticks([])
 	pyplot.imshow(f[:, :, 1], cmap='gray')
 	ix += 1
+
+# Do it again with all angles image
+untransformed_img = load_img("../../DataGenerationUpdated/OffsetTestImages/AllAngles.png", target_size=(128, 128))
+img = img_to_array(untransformed_img)
+img = np.expand_dims(img, axis=0);
+
+output = model.layers[2].output
+model_quick = tf.keras.Model(inputs=model.inputs, outputs=output)
+
+feature_output = model_quick.predict(img)
+
+ax = pyplot.subplot(4, n_filters+1, ix)
+ax.set_xticks([])
+ax.set_yticks([])
+pyplot.imshow(untransformed_img, cmap='gray')
+ix += 1;
+
+for ftr in range(feature_output.shape[3]):
+    ax = pyplot.subplot(4, n_filters+1, ix)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    pyplot.imshow(feature_output[0, :, :, ftr], cmap='gray')
+    ix += 1;
 
 # Plot the output of the convolutional layers with a non-signal image
 untransformed_img = load_img("./DataGenerationUpdated/UserDataTraining/UserNoSignal/PilotData2_Result=110.png", target_size=(128, 128))
@@ -31,14 +54,14 @@ model_quick = tf.keras.Model(inputs=model.inputs, outputs=output)
 
 feature_output = model_quick.predict(img)
 
-ax = pyplot.subplot(3, n_filters+1, ix)
+ax = pyplot.subplot(4, n_filters+1, ix)
 ax.set_xticks([])
 ax.set_yticks([])
 pyplot.imshow(untransformed_img, cmap='gray')
 ix += 1;
 
 for ftr in range(feature_output.shape[3]):
-    ax = pyplot.subplot(3, n_filters+1, ix)
+    ax = pyplot.subplot(4, n_filters+1, ix)
     ax.set_xticks([])
     ax.set_yticks([])
     pyplot.imshow(feature_output[0, :, :, ftr], cmap='gray')
@@ -54,14 +77,14 @@ model_quick = tf.keras.Model(inputs=model.inputs, outputs=output)
 
 feature_output = model_quick.predict(img)
 
-ax = pyplot.subplot(3, n_filters+1, ix)
+ax = pyplot.subplot(4, n_filters+1, ix)
 ax.set_xticks([])
 ax.set_yticks([])
 pyplot.imshow(untransformed_img, cmap='gray')
 ix += 1;
 
 for ftr in range(feature_output.shape[3]):
-    ax = pyplot.subplot(3, n_filters+1, ix)
+    ax = pyplot.subplot(4, n_filters+1, ix)
     ax.set_xticks([])
     ax.set_yticks([])
     pyplot.imshow(feature_output[0, :, :, ftr], cmap='gray')

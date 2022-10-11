@@ -22,7 +22,7 @@ tf.config.experimental.set_memory_growth(GPU_Device[0], True)
 #os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 
 #Go to the directory with the data
-data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTrainingSmall/")
+data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 
 #Determining Seed
 seed = randint(0, 5000)
@@ -35,15 +35,15 @@ train_ds = tf.keras.utils.image_dataset_from_directory(
     seed = seed,
     shuffle=False,
     #image_size=(150, 150)) #Large
-    #image_size=(128, 128)) #Medium
-    image_size=(106, 106)) #Small
+    image_size=(128, 128)) #Medium
+    #image_size=(106, 106)) #Small
 
 #Convert into npy arrays 
 inputs = np.concatenate(list(train_ds.map(lambda x, y:x)))
 targets = np.concatenate(list(train_ds.map(lambda x, y:y)))
 
 #Implementing K-Fold cross validation
-num_folds = 10
+num_folds = 5
 platacc_per_fold = []
 platstd_per_fold = []
 plattime_per_fold = []
@@ -75,7 +75,7 @@ for train, test in kfold.split(inputs, targets):
 
         def accuracyPlateu(self):
             #Check the last 10 values of the has crateed a new maximum
-            if len(self.accuracies) < 350:
+            if len(self.accuracies) < 200:
                 return False
             if (max(self.accuracies[-20:]) < max(self.accuracies)):
                 return True
@@ -116,8 +116,7 @@ for train, test in kfold.split(inputs, targets):
     model = tf.keras.Sequential([
       data_augmentation,
       normalization_layer,
-      tf.keras.layers.Conv2D(32, 13), 
-      tf.keras.layers.PReLU(),
+      tf.keras.layers.Conv2D(4, 17, activation='relu'), 
       tf.keras.layers.MaxPooling2D(),
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dropout(0.25),
