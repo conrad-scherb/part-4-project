@@ -96,7 +96,9 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(32,13, activation='relu'),
+  tf.keras.layers.Conv2D(32,5, activation='relu'),
+  tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Conv2D(16,13, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
@@ -126,4 +128,4 @@ history = model.fit(
 
 #Save the model
 val_acc = history.history['val_accuracy']
-model.save("Model_32Neuron_13Kernel_" +  str(round(val_acc[len(val_acc)-1], 3)) + "accuracy") 
+model.save("Model_32-16Neuron_5-13Kernel_" +  str(round(val_acc[len(val_acc)-1], 3)) + "accuracy") 
