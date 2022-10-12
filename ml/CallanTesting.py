@@ -43,7 +43,7 @@ inputs = np.concatenate(list(train_ds.map(lambda x, y:x)))
 targets = np.concatenate(list(train_ds.map(lambda x, y:y)))
 
 #Implementing K-Fold cross validation
-num_folds = 5
+num_folds = 10
 platacc_per_fold = []
 platstd_per_fold = []
 plattime_per_fold = []
@@ -114,13 +114,15 @@ for train, test in kfold.split(inputs, targets):
 
     #Structure of the model
     model = tf.keras.Sequential([
-      data_augmentation,
-      normalization_layer,
-      tf.keras.layers.Conv2D(4, 17, activation='relu'), 
-      tf.keras.layers.MaxPooling2D(),
-      tf.keras.layers.Flatten(),
-      tf.keras.layers.Dropout(0.25),
-      tf.keras.layers.Dense(1, activation='sigmoid')
+    data_augmentation,
+    normalization_layer,
+    tf.keras.layers.Conv2D(32,5, activation='relu'),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Conv2D(16,13, activation='relu'),
+    tf.keras.layers.MaxPooling2D(),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dropout(0.25),
+    tf.keras.layers.Dense(1, activation='sigmoid')
     ])
 
     #Compile the model
