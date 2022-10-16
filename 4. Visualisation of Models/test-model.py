@@ -2,9 +2,9 @@ import tensorflow as tf
 import pathlib
 from random import randint
 
-model = tf.keras.models.load_model("./ml/Model_1Neuron_13Kernel_0.89accuracy")
+model = tf.keras.models.load_model("../Model_8Neuron_13Kernel_0.93accuracy")
 
-data_dir = pathlib.Path("./DataGenerationUpdated/HorizontalData/")
+data_dir = pathlib.Path("../../DataGenerationUpdated/RandomOffsetData/")
 
 #Determining Seed
 seed = randint(0, 5000)

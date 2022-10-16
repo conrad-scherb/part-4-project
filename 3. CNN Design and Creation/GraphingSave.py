@@ -26,7 +26,7 @@ data_dir = pathlib.Path("../DataGenerationUpdated/UserDataTraining/")
 #Determining Seed
 seed = randint(0, 5000)
 print("The seed for this run is: ", seed)
-epochs = 1000
+epochs = 200
 
 #Training data
 train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -96,7 +96,7 @@ normalization_layer = tf.keras.layers.Rescaling(1./255)
 model = tf.keras.Sequential([
   data_augmentation,
   normalization_layer,
-  tf.keras.layers.Conv2D(32,13, activation='relu'),
+  tf.keras.layers.Conv2D(64,13, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Flatten(),
   tf.keras.layers.Dropout(0.25),
@@ -123,17 +123,6 @@ history = model.fit(
     batch_size=80,
     callbacks = [plateuStop()]
 )
-
-#Plot the model performance
-pred = model.predict(
-    validation_ds,
-    batch_size=4)
-pred = tf.greater(pred, 0.5)
-print(pred)
-labels = np.concatenate([y for x, y in validation_ds], axis = 0)
-print(labels)
-print(tf.math.confusion_matrix(labels, pred))
-
 #Plotting results of model
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
@@ -143,6 +132,8 @@ val_loss = history.history['val_loss']
 plt.plot(acc, 'bo', label='Training acc')
 plt.plot(val_acc, 'b', label='Validation acc')
 plt.title('Training and validation accuracy')
+plt.xlabel("Number of Epochs")
+plt.ylabel("Validation Accuracy")
 plt.legend()
 
 plt.figure()
@@ -150,6 +141,8 @@ plt.figure()
 plt.plot(loss, 'bo', label='Training loss')
 plt.plot(val_loss, 'b', label='Validation loss')
 plt.title('Training and validation loss')
+plt.xlabel("Number of Epochs")
+plt.ylabel("Validation Accuracy")
 plt.legend()
 
 plt.show()
