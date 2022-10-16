@@ -7,6 +7,7 @@
 %FACTOR_SIGNAL = 2.0; % 66 to 69
 %FACTOR_SIGNAL = 2.5; % 70, 71 ... 101
 
+%Listing Response Data
 clear resp
 %           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 resp{49} = 'kkkjkkkkkjjkjkkkjkjkkkkjkjjkjjjjjjjkjkkk';
@@ -73,9 +74,11 @@ resp{109} = 'jjkjjkkjjjkkjkkjjjjjkjkkkjjkkkjkkjkkjkkk';
 resp{110} = 'kjjkjkjkkkkjjkkkkjjkkjjjkjkkjkkjjkkjkjkk';
 resp{111} = 'kjjkkkkkkkjjkkjjkjkkjkjjkjkjkkjkjjkkkkjk';
 
+%Functions for converting complex numbers into degrees 
 fnAngle2UnitComplex = @(x_deg) complex(cos(x_deg/180*pi), sin(x_deg/180*pi));
 fnDoubleTheta = @(z) abs(z).*fnAngle2UnitComplex(2*angle(z)/pi*180);
 
+%Loop which goes through and classifies all of the data
 dsgNoiseByType = {[];[];[];[]};
 for iiblock = 49:111
 
